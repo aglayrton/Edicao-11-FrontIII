@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { cadastrar } from '../store/feature/produtoSlice';
+import { apagar, cadastrar } from '../store/feature/produtoSlice';
 import { RootState } from '../store/store';
 
 const Produto: React.FC = () => {
@@ -12,7 +12,7 @@ const Produto: React.FC = () => {
 
 	const initialState = useSelector(
 		//chama o estado global da reducer
-		(state: RootState) => state.produtosReducer.produtos
+		(state: RootState) => state.produtosReducer.produto
 	);
 
 	//funcao qualquer somente para acionar o cadastro
@@ -25,6 +25,10 @@ const Produto: React.FC = () => {
 				quantidade,
 			})
 		);
+	};
+
+	const apagarDado = (id: number) => {
+		dispatch(apagar(id));
 	};
 
 	return (
@@ -57,6 +61,7 @@ const Produto: React.FC = () => {
 							<h1>{elemento.nome}</h1>
 							<p>R$ {elemento.preco}</p>
 							<p>Quant: {elemento.quantidade}</p>
+							<button onClick={() => apagarDado(elemento.id)}>deletar</button>
 						</div>
 					);
 				})}

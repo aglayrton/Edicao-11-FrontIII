@@ -9,14 +9,6 @@ function App() {
 	const initialState = useSelector((state: RootState) => state.contadorReducer);
 	return (
 		<>
-			<input
-				type="text"
-				value={valor}
-				onChange={(e) => setValor(Number(e.target.value))}
-			/>
-			<h1>{initialState.conta}</h1>
-			<button onClick={() => dispatch(incrementar(valor))}>incrementar</button>
-			<button onClick={() => dispatch(decrementar())}>decrementar</button>
 			<Produto/>
 		</>
 	);
