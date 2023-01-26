@@ -6,10 +6,12 @@ import Produto from './page/Produto';
 function App() {
 	const [valor, setValor] = useState(0);
 	const dispatch = useDispatch();
-	const initialState = useSelector((state: RootState) => state.contadorReducer);
+	const initialState = useSelector(
+		(state: RootState) => state.contadorReducer
+	);
 	return (
 		<>
-			<Produto/>
+			<Produto />
 		</>
 	);
 }
