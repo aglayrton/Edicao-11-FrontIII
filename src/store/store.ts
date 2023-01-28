@@ -1,8 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import contadorSlice from './feature/contadorSlice';
 import produtosSlice from './feature/produtoSlice';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; //usando o localStorage
 
 const store = configureStore({
 	reducer: {
