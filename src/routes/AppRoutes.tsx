@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Dashboard from '../page/Dashboard';
 import Login from '../page/Login';
 import LoginMui from '../page/Login/LoginMui';
 import Signup from '../page/Signup';
@@ -14,6 +15,7 @@ function AppRoutes() {
 					<Route path="/" element={<Login />} />
 					<Route path="/signup" element={<Signup />} />
 					<Route path="/login" element={<LoginMui />} />
+					<Route path="/dashboard" element={<Dashboard />} />
 					<Route path="*" element={<h1>Not Found</h1>} />
 				</Routes>
 			</BrowserRouter>
