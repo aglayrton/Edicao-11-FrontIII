@@ -1,26 +1,65 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { TextField, Button, Typography, useEventCallback } from '@mui/material';
 import { Stack } from '@mui/system';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import InputDefault, { Name } from '../InputDefault';
 
 interface Mode {
 	mode: 'login' | 'signup';
+}
+
+interface Recado {
+	id: string;
+	title: string;
+	description: string;
+}
+
+interface User {
+	name: string;
+	email: string;
+	password: string;
+	recados: Recado[];
 }
 
 const Form = ({ mode }: Mode) => {
 	//href html a
 	const navigate = useNavigate();
 
-	const [email, setEmail] = useState('');
-	const [senha, setSenha] = useState('');
-	const [erro, setErro] = useState(false);
-	// const senha = useRef<HTMLInputElement>(null);
+	const [input, setInput] = useState({
+		name: '',
+		email: '',
+		password: '',
+		confirmPassword: '',
+	});
+	const [listaDeUsuario, setListaDeUsuario] = useState<User[]>([]);
 
-	const logar = () => {
-		console.log(email, senha);
-		// 	console.log(senha.current?.value);
+	//criar os estados de erros para cada campo
+	const [errorName, setErrorName] = useState(false);
+	const [errorEmail, setErrorEmail] = useState(false);
+	const [errorPassword, setErrorPassword] = useState(false);
+	const [errorConfirmPassword, setErrorConfirmPassword] = useState(false);
+
+	//vou pegar a informacao digitada, mas também vou indicar de qual campos ele esta pegando
+	const pegarDados = (value: string, key: Name) => {
+		switch (key) {
+			case 'name':
+				setInput({ ...input, name: value });
+				break;
+			case 'email':
+				setInput({ ...input, email: value });
+				break;
+			case 'password':
+				setInput({ ...input, password: value });
+				break;
+			case 'confirmPassword':
+				setInput({ ...input, confirmPassword: value });
+				break;
+			default:
+		}
 	};
 
+	//chama a outra pagina
 	const outraPagina = () => {
 		if (mode == 'login') {
 			navigate('/signup');
@@ -29,36 +68,88 @@ const Form = ({ mode }: Mode) => {
 		}
 	};
 
+	//validacao
 	useEffect(() => {
-		if (senha.length >= 1 && senha.length <= 3) {
-			setErro(true);
-		}else{
-			setErro(false);
+		if (input.name.length < 3) {
+			setErrorName(true);
+		} else {
+			setErrorName(false);
 		}
-	}, [email, senha]);
+
+		if (!input.email.match(/\S+@\S+\.\S+/)) {
+			setErrorEmail(true);
+		} else {
+			setErrorEmail(false);
+		}
+
+		if (mode == 'signup') {
+			if (
+				!input.password ||
+				input.password.length < 6 ||
+				!input.confirmPassword ||
+				input.password !== input.confirmPassword
+			) {
+				setErrorPassword(true);
+				setErrorConfirmPassword(true);
+			} else {
+				setErrorPassword(false);
+				setErrorConfirmPassword(false);
+			}
+		}
+	}, [input]);
+
+	const register = () => {
+		const newUser: User = {
+			name: input.name,
+			email: input.email,
+			password: input.password,
+			recados: [],
+		};
+		console.log(newUser);
+	};
+
+	const nextInput = (e: any, nameT?: string) => {
+		const { key } = e;
+		if (key === 'Enter') {
+			if (nameT) {
+				const newInput = document.querySelector(`#${nameT}`);
+				// @ts-ignore
+				if (newInput) newInput.focus();
+			} else {
+				if (
+					!errorName &&
+					!errorEmail &&
+					!errorPassword &&
+					!errorConfirmPassword
+				) {
+					register();
+				}
+			}
+		}
+	};
 
 	return (
 		<>
 			<Stack spacing={2}>
 				{mode === 'login' && (
 					<>
-						<TextField
-							label="email"
+						<InputDefault
+							name="email"
+							label="Digite seu email"
 							type="email"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
+							value={input.email}
+							color={errorEmail ? 'error' : 'success'}
+							handleChange={pegarDados}
 						/>
-						{/* <TextField label="senha" type="password" inputRef={senha} /> */}
-						<TextField
-							label="senha"
+						<InputDefault
+							name="password"
+							label="Digite sua senha"
 							type="password"
-							value={senha}
-							onChange={(e) => setSenha(e.target.value)}
-							error={erro}
+							value={input.password}
+							color={errorPassword ? 'error' : 'success'}
+							handleChange={pegarDados}
 						/>
-						<Button variant="contained" onClick={() => logar()}>
-							Acessar
-						</Button>
+						<Button variant="contained">Acessar</Button>
 						<Typography>
 							Não tem conta?{' '}
 							<Typography variant="caption" onClick={() => outraPagina()}>
@@ -70,10 +161,49 @@ const Form = ({ mode }: Mode) => {
 
 				{mode === 'signup' && (
 					<>
-						<TextField label="email" type="email" />
-						<TextField label="senha" type="password" />
-						<TextField label="confirmar senha" type="password" />
-						<Button variant="outlined" color="success">
+						<InputDefault
+							name="name"
+							label="Digite seu nome"
+							type="text"
+							value={input.name}
+							color={errorName ? 'error' : 'success'}
+							handleChange={pegarDados}
+							onKeyDown={(e) => nextInput(e, 'email')}
+						/>
+						<InputDefault
+							name="email"
+							label="Digite seu email"
+							type="email"
+							value={input.email}
+							color={errorEmail ? 'error' : 'success'}
+							handleChange={pegarDados}
+							onKeyDown={(e) => nextInput(e, 'password')}
+						/>
+						<InputDefault
+							name="password"
+							label="Digite sua senha"
+							type="password"
+							value={input.password}
+							color={errorPassword ? 'error' : 'success'}
+							handleChange={pegarDados}
+							onKeyDown={(e) => nextInput(e, 'confirmPassword')}
+						/>
+
+						<InputDefault
+							name="confirmPassword"
+							label="Confirme sua senha"
+							type="password"
+							value={input.confirmPassword}
+							color={errorConfirmPassword ? 'error' : 'success'}
+							handleChange={pegarDados}
+							onKeyDown={(e) => nextInput(e)}
+						/>
+						<Button
+							variant="outlined"
+							color="success"
+							disabled={errorEmail || errorPassword}
+							onClick={register}
+						>
 							Registro
 						</Button>
 						<Button
