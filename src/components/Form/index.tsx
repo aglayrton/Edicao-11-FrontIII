@@ -2,37 +2,30 @@
 import { TextField, Button, Typography, useEventCallback } from '@mui/material';
 import { Stack } from '@mui/system';
 import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { addUser } from '../../store/modules/userSlice';
+import { RootState } from '../../store/store';
+import Recados from '../../types/recados';
+import User from '../../types/users';
 import InputDefault, { Name } from '../InputDefault';
 
 interface Mode {
 	mode: 'login' | 'signup';
 }
 
-interface Recado {
-	id: string;
-	title: string;
-	description: string;
-}
-
-interface User {
-	name: string;
-	email: string;
-	password: string;
-	recados: Recado[];
-}
-
 const Form = ({ mode }: Mode) => {
 	//href html a
 	const navigate = useNavigate();
-
+	//estado local
 	const [input, setInput] = useState({
 		name: '',
 		email: '',
 		password: '',
 		confirmPassword: '',
 	});
-	const [listaDeUsuario, setListaDeUsuario] = useState<User[]>([]);
+	//SO PARA DISPARAR AS ACOES
+	const dispatch = useDispatch();
 
 	//criar os estados de erros para cada campo
 	const [errorName, setErrorName] = useState(false);
@@ -98,14 +91,15 @@ const Form = ({ mode }: Mode) => {
 		}
 	}, [input]);
 
+	//CLICAR NO BOTAO ELE CRIA O USUARIO
 	const register = () => {
 		const newUser: User = {
 			name: input.name,
 			email: input.email,
 			password: input.password,
-			recados: [],
+			recados: []
 		};
-		console.log(newUser);
+		dispatch(addUser(newUser));
 	};
 
 	const nextInput = (e: any, nameT?: string) => {

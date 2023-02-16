@@ -2,29 +2,18 @@ import { configureStore } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import persistStore from 'redux-persist/es/persistStore';
 import storage from 'redux-persist/lib/storage';
-import contadorSlice from './feature/contadorSlice';
-import itemSlice from './feature/itemSlice';
-import produtosSlice from './feature/produtoSlice';
+import userSlice from './modules/userSlice';
 
 const persistConfig = {
-	key: 'items',
-	storage,
+	key: 'users', //nome do item que fica no local storage
+	storage, //storage que basicamente é o recurso que já fazer as funcionalidades do local storage
 };
 
-const persistedReducers = persistReducer(persistConfig, itemSlice);
-
+const persistedReducers = persistReducer(persistConfig, userSlice);
+//store disponibiliza as reducers
 const store = configureStore({
 	reducer: {
-		produtosReducer: produtosSlice,
-		contadorReducer: contadorSlice,
-		itemReducer: persistedReducers,
-	},
-});
-
+		userReducer: persistedRe 
 const persistor = persistStore(store);
-export { store, persistor };
 
-//TYPESCRIPT
-//exportando o estado inicial
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export { store, persistor };  

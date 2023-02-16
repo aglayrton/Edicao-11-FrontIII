@@ -1,6 +1,9 @@
 import { TextField } from '@mui/material';
 import React from 'react';
 
+export type Name = 'name' | 'email' | 'password' | 'confirmPassword';
+
+//criei um tipo
 interface InputDefaultProp {
 	name: Name;
 	type: string;
@@ -11,7 +14,7 @@ interface InputDefaultProp {
 	onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
 }
 
-export type Name = 'name' | 'email' | 'password' | 'confirmPassword';
+
 
 const InputDefault: React.FC<InputDefaultProp> = ({
 	name,

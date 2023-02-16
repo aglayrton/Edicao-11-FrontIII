@@ -4,7 +4,7 @@ interface User {
 	name: string;
 	email: string;
 	password: string;
-	recados: Recados[];
+	recados?: Recados[];
 }
 
 export default User;
