@@ -13,7 +13,9 @@ const persistedReducers = persistReducer(persistConfig, userSlice);
 //store disponibiliza as reducers
 const store = configureStore({
 	reducer: {
-		userReducer: persistedRe 
+		userReducer: persistedReducers 
+	}
+});
 const persistor = persistStore(store);
 
 export { store, persistor };  
